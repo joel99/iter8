@@ -3,8 +3,6 @@
 //HW18
 //2016 - 03 - 24
 
-import java.util.Iterator;
-
 public class LList<T> implements List<T>{
 
     private DLLNode<T> head;
@@ -20,10 +18,48 @@ public class LList<T> implements List<T>{
 	return size;
     } //size
 	
+
     public Iterator iterator(){
-	return null;
+	Iterator<T> it = new MyIterator<>();
+	return it;
     }
 
+    private class MyIterator implements Iterator<T>{
+	
+	private DLLNode<T> _curr;
+	
+	public MyIterator(){
+	    _curr = head;
+	}
+
+	public boolean hasNext(){
+	    return _curr.getNext() != null;
+	}
+	
+	public T next(){
+	    _curr = _curr.getNext();
+	    return _curr.getCargo();
+	}
+	
+	public void remove(){
+	    size--; 
+	    if (_curr == head) { 
+		head = head.getNext();
+		head.setPrev(null); 
+		_curr = head;
+		return;} 
+	    if (_curr == tail) {
+		tail = tail.getPrev();
+		tail.setNext(null); 
+		_curr = tail;
+		return;
+	    }
+	    _curr.getPrev().setNext(_curr.getNext());
+	    _curr.getNext().setPrev(_curr.getPrev()); 
+	    _curr = _curr.getNext();
+	}
+	
+    }
     public boolean add(T y){ //add
         DLLNode<T> x = new DLLNode<>(y);
 	try{
