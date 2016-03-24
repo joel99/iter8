@@ -1,13 +1,17 @@
-//Team Double Trouble - Joel Ye and Jennifer Yu
+//Team iter8 -- Ricky Wu and Joel Ye
 //APCS1 pd10
-//HW15 -- Generically Speaking
-//2016 - 03 - 17
+//HW18
+//2016 - 03 - 24
+
+import java.util.Iterator;
+
 public class LList<T> implements List<T>{
+
     private DLLNode<T> head;
     private DLLNode<T> tail;
-    private int size; //tracks size to avoid excessive calculation each time.
+    private int size;
     
-    public LList(){ //default constructor
+    public LList(){
 	head = null;
 	size = 0;
     }
@@ -16,6 +20,10 @@ public class LList<T> implements List<T>{
 	return size;
     } //size
 	
+    public Iterator iterator(){
+	return null;
+    }
+
     public boolean add(T y){ //add
         DLLNode<T> x = new DLLNode<>(y);
 	try{
@@ -57,32 +65,32 @@ public class LList<T> implements List<T>{
 	tmp.getPrev().setNext(new DLLNode<T>(x)); //for tmp's previous' next, set next as new node
 	tmp.getPrev().getNext().setNext(tmp); //for new node, set next as tmp
 	tmp.setPrev(tmp.getPrev().getNext());
-	size++; //increment size
+	size++; 
     }	
 
-    public T remove(int i){ //remove
-	if ( i < 0 || i >= size ) //if not in range
+    public T remove(int i){ 
+	if ( i < 0 || i >= size )
 	    throw new IndexOutOfBoundsException();
 	size--;
-	DLLNode<T> temp = head; //set alias to the head
-	if (i == 0) { //if removing first node
-	    head = head.getNext(); //set next node as new head
-	    head.setPrev(null); //cut it off from removed node
-	    return temp.getVal();} //return alias of old head
+	DLLNode<T> temp = head; 
+	if (i == 0) { 
+	    head = head.getNext();
+	    head.setPrev(null); 
+	    return temp.getVal();} 
 	if (i == size-1) {
-		DLLNode<T> temp2 = tail; //set alias to the tail
-		tail = tail.getPrev(); //set new tail
-		tail.setNext(null); //set new tail's next to null
-		return temp2.getVal(); //return alias
+		DLLNode<T> temp2 = tail;
+		tail = tail.getPrev();
+		tail.setNext(null); 
+		return temp2.getVal();
 	}
-	for (; i > 0; i--){ //if removing another node
-	    temp = temp.getNext(); //set alias to node at index
+	for (; i > 0; i--){ 
+	    temp = temp.getNext(); 
 	}
-	T ret = temp.getVal(); //store first value
-	temp.getPrev().setNext(temp.getNext()); //set prev node's next to next
+	T ret = temp.getVal(); 
+	temp.getPrev().setNext(temp.getNext()); 
 	if (temp.getNext() != null)
-	    temp.getNext().setPrev(temp.getPrev()); //set next node's prev to prev
-	return ret; //return stored value
+	    temp.getNext().setPrev(temp.getPrev()); 
+	return ret;
     }
 
     public T get(int i){
@@ -99,10 +107,9 @@ public class LList<T> implements List<T>{
 	return ret;
     };
 
-    // override inherited toString
     public String toString() { 
 	String retStr = "HEAD->";
-	DLLNode<T> tmp = head; //init tr
+	DLLNode<T> tmp = head; 
 	while( tmp != null ) {
 	    retStr += tmp.getVal() + "->";
 	    tmp = tmp.getNext();
