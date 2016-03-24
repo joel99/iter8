@@ -3,6 +3,7 @@
 //HW18
 //2016 - 03 - 24
 
+import java.util.Iterator;
 public class LList<T> implements List<T>{
 
     private DLLNode<T> head;
@@ -19,8 +20,8 @@ public class LList<T> implements List<T>{
     } //size
 	
 
-    public Iterator iterator(){
-	return new MyIterator<T>();
+    public Iterator<T> iterator(){
+	return new MyIterator();
     }
 
     private class MyIterator implements Iterator<T>{
@@ -38,8 +39,8 @@ public class LList<T> implements List<T>{
 	
 	public T next(){
 	    _curr = _curr.getNext();
-	    return _curr.getCargo();
 	    nexted = true;
+	    return _curr.getCargo();
 	}
 	
 	public void remove(){
@@ -64,10 +65,9 @@ public class LList<T> implements List<T>{
 	
     }
     public boolean add(T y){ //add
-        DLLNode<T> x = new DLLNode<>(y);
 	try{
 	    if (size == 0) {
-		tail = new DLLNode<T>(y);
+		tail = new DLLNode(y);
 		head = tail;
 	    }
 	    else {
@@ -82,50 +82,87 @@ public class LList<T> implements List<T>{
 	catch(Exception e){return false;} //it didn't work...
     }
 
-    public void add(int i, T x){ //add-at-index
-	if ( i < 0 || i > size ) //index is in range
+    public void add( int index, T newVal ) {
+
+	if ( index < 0 || index > size() )
 	    throw new IndexOutOfBoundsException();
-	if (i == 0) {
-	    DLLNode<T> tmp = head; //set tmp to head
-	    DLLNode<T> tmp2 = new DLLNode<T>(x); //set tmp2 as new node
-	    tmp.setPrev(tmp2); //set prev of head to new node
-	    tmp2.setNext(tmp); //set next of new node to head
-	    tmp2.setPrev(null); //set prev of new node to null
-	    head = tmp2; //set new node as new head
+
+	else if ( index == size() ) 
+	    addLast( newVal );
+
+	DLLNode newNode = new DLLNode( newVal, null, null );
+
+	//if index==0, insert node before head node
+	if ( index == 0 ) 
+	    addFirst( newVal );
+	else {
+	    DLLNode tmp1 = head; //create alias to head
+
+	    //walk tmp1 to node before desired node
+	    for( int i=0; i < index-1; i++ )
+		tmp1 = tmp1.getNext();
+
+	    //init a pointer to node at insertion index
+	    DLLNode tmp2 = tmp1.getNext(); 
+
+	    //insert new node
+	    newNode.setNext( tmp2 );
+	    newNode.setPrev( tmp1 );
+	    tmp1.setNext( newNode );
+	    tmp2.setPrev( newNode );
+
+	    //increment size attribute
 	    size++;
-	    return;} //if adding to back, use add
-	if (i == size-1) { //if last element use add
-		add(x);
-		size++;
-		return;
+
 	}
-	DLLNode<T> tmp = head; //set alias to the head
-	for (; i > 0; i--) {tmp = tmp.getNext();} //for tmp node at index
-	tmp.getPrev().setNext(new DLLNode<T>(x)); //for tmp's previous' next, set next as new node
-	tmp.getPrev().getNext().setNext(tmp); //for new node, set next as tmp
-	tmp.setPrev(tmp.getPrev().getNext());
-	size++; 
-    }	
+    }
+
+    public void addFirst( T newFirstVal ) { 
+	//insert new node before first node (prev=null, next=_head)
+	head = new DLLNode<T>( newFirstVal, null, head );
+
+	if ( size == 0 ) 
+	    tail = head;
+	else 
+	    head.getNext().setPrev( head );
+	size++;
+    }
+
+    public void addLast( T newLastVal ) { 
+	//insert new node before first node (prev=_last, next=null)
+	tail = new DLLNode<T>( newLastVal, tail, null );
+
+	if ( size == 0 ) 
+	    head = tail;
+	else 
+	    tail.getPrev().setNext( tail );
+	size++;
+    }
 
     public T remove(int i){ 
 	if ( i < 0 || i >= size )
 	    throw new IndexOutOfBoundsException();
 	size--;
-	DLLNode<T> temp = head; 
+	DLLNode<T> temp = head;
+	if (size() == 1){
+	    head = tail = null;
+	    size--;
+	    return null;
+	}
 	if (i == 0) { 
 	    head = head.getNext();
 	    head.setPrev(null); 
-	    return temp.getVal();} 
+	    return temp.getCargo();} 
 	if (i == size-1) {
-		DLLNode<T> temp2 = tail;
-		tail = tail.getPrev();
-		tail.setNext(null); 
-		return temp2.getVal();
+	    DLLNode<T> temp2 = tail;
+	    tail = tail.getPrev();
+	    tail.setNext(null); 
+	    return temp2.getCargo();
 	}
 	for (; i > 0; i--){ 
 	    temp = temp.getNext(); 
 	}
-	T ret = temp.getVal(); 
+	T ret = temp.getCargo(); 
 	temp.getPrev().setNext(temp.getNext()); 
 	if (temp.getNext() != null)
 	    temp.getNext().setPrev(temp.getPrev()); 
@@ -135,14 +172,14 @@ public class LList<T> implements List<T>{
     public T get(int i){
 	DLLNode<T> temp = head;
 	while (i > 0) {temp = temp.getNext(); i--;}
-	return temp.getVal();
+	return temp.getCargo();
     };
 	
     public T set(int i, T x){
 	DLLNode<T> temp = head;
 	while (i > 0) {temp = temp.getNext(); i--;}
-	T ret = temp.getVal();
-	temp.setVal(x);
+	T ret = temp.getCargo();
+	temp.setCargo(x);
 	return ret;
     };
 
@@ -150,7 +187,7 @@ public class LList<T> implements List<T>{
 	String retStr = "HEAD->";
 	DLLNode<T> tmp = head; 
 	while( tmp != null ) {
-	    retStr += tmp.getVal() + "->";
+	    retStr += tmp.getCargo() + "->";
 	    tmp = tmp.getNext();
 	}
 	retStr += "NULL";

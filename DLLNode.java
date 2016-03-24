@@ -1,48 +1,77 @@
-//Team Double Trouble - Joel Ye and Jennifer Yu
-//APCS1 pd10
-//HW15 -- Generically Speaking
-//2016 - 03 - 17
+/*****************************************************
+ * class DLLNode
+ * Implements a node, for use in lists and other container classes.
+ *****************************************************/
 
-public class DLLNode<T>{
-    private T val;
-    private DLLNode next;
-    private DLLNode prev;
+public class DLLNode<T> {
 
-    public DLLNode (T val){
-	this.val = val;
+    private T _cargo;    //cargo may only be of type T
+    private DLLNode<T> _nextNode, _prevNode; //pointers to next, prev DLLNodes
+
+
+    // constructor -- initializes instance vars
+    public DLLNode( T value, DLLNode<T> prev, DLLNode<T> next ) {
+	_cargo = value;
+	_nextNode = next;
+	_prevNode = prev;
     }
-    public DLLNode (T val, DLLNode<T> prev, DLLNode<T> next){
-	this.val = val;
-	this.next = next;
-    }
-    public T getVal(){
-	return val;
-    }
-    public T setVal(T newVal){
-	T temp = val;
-	val = newVal;
-	return temp; 
-    }
-    public DLLNode<T> getNext(){
-	return next;
-    }
-    public DLLNode<T> setNext(DLLNode<T> newNext){
-	DLLNode<T> temp = next;
-	next = newNext;
-	return temp;
+    public DLLNode(T value){
+	this(value, null, null);
     }
 
-    public DLLNode<T> getPrev(){
-	return prev;
+
+    //--------------v  ACCESSORS  v--------------
+    public T getCargo() { return _cargo; }
+
+    public DLLNode<T> getNext() { return _nextNode; }
+
+    public DLLNode<T> getPrev() { return _prevNode; }
+    //--------------^  ACCESSORS  ^--------------
+
+
+    //--------------v  MUTATORS  v--------------
+    public T setCargo( T newCargo ) {
+	T foo = getCargo();
+	_cargo = newCargo;
+	return foo;
     }
 
-    public DLLNode<T> setPrev(DLLNode<T> newPrev){
-	DLLNode<T> temp = prev;
-	prev = newPrev;
-	return temp;
+    public DLLNode<T> setNext( DLLNode<T> newNext ) {
+	DLLNode<T> foo = getNext();
+	_nextNode = newNext;
+	return foo;
     }
 
-    public String toString(){
-	return val.toString();
+    public DLLNode<T> setPrev( DLLNode<T> newPrev ) {
+	DLLNode<T> foo = getPrev();
+	_prevNode = newPrev;
+	return foo;
     }
-}
+    //--------------^  MUTATORS  ^--------------
+
+
+    // override inherited toString
+    public String toString() { return _cargo.toString(); }
+
+
+    //main method for testing
+    public static void main( String[] args ) {
+
+	//Below is an exercise in creating a linked list...
+
+	/*********************
+	//Create a node
+	DLLNode first = new DLLNode( "cat", null );
+	//Create a new node after the first
+	first.setNext( new DLLNode( "dog", null ) );
+	//Create a third node after the second
+	first.getNext().setNext( new DLLNode( "cow", null ) );
+	DLLNode temp = first; 
+	while( temp != null ) {
+	    System.out.println( temp );
+	    temp = temp.getNext();
+	}
+	***********************/
+    }//end main
+
+}//end class DLLNode
