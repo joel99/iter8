@@ -20,14 +20,14 @@ public class LList<T> implements List<T>{
 	
 
     public Iterator iterator(){
-	Iterator<T> it = new MyIterator<>();
-	return it;
+	return new MyIterator<T>();
     }
 
     private class MyIterator implements Iterator<T>{
 	
 	private DLLNode<T> _curr;
-	
+	private boolean nexted;
+
 	public MyIterator(){
 	    _curr = head;
 	}
@@ -39,9 +39,11 @@ public class LList<T> implements List<T>{
 	public T next(){
 	    _curr = _curr.getNext();
 	    return _curr.getCargo();
+	    nexted = true;
 	}
 	
 	public void remove(){
+	    if (nexted){
 	    size--; 
 	    if (_curr == head) { 
 		head = head.getNext();
@@ -57,6 +59,7 @@ public class LList<T> implements List<T>{
 	    _curr.getPrev().setNext(_curr.getNext());
 	    _curr.getNext().setPrev(_curr.getPrev()); 
 	    _curr = _curr.getNext();
+	}
 	}
 	
     }
